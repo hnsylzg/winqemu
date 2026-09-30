@@ -12,7 +12,7 @@ namespace WinqEmuLauncher
         public Dictionary<string, int> Running { get; set; } = new Dictionary<string, int>();
         public string LastSelected { get; set; }
         // 全局设置（与每台的 VM 配置区分）
-        public string QemuExeW { get; set; } = "";  // qemu-system-x86_64w.exe（无窗口版，启动 VM 用）；空=自动探测
+        public string QemuExeW { get; set; } = "";  // qemu-system-x86_64w.exe（GUI 版，启动 VM 用）；空=自动探测
         public string QemuExe { get; set; } = "";   // qemu-system-x86_64.exe（控制台版，导出 bat 用）；空=同目录探测
         public string DefaultVmDir { get; set; } = "";   // 新建磁盘默认落盘目录；空=默认值
         public string DefaultIsoDir { get; set; } = "";  // 浏览 ISO 的初始目录；空=默认值

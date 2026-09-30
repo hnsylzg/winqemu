@@ -14,7 +14,7 @@ namespace WinqEmuLauncher
     // plus port auto-allocation and stderr capture.
     public class QemuRunner
     {
-        public string QemuExeW { get; set; }   // qemu-system-x86_64w.exe（无窗口版，启动 VM）
+        public string QemuExeW { get; set; }   // qemu-system-x86_64w.exe（GUI 版，启动 VM）
         public string QemuExe { get; set; }    // qemu-system-x86_64.exe（控制台版，导出 bat）
         public Action<string> Log { get; set; }
 
@@ -23,7 +23,7 @@ namespace WinqEmuLauncher
             : (Path.GetDirectoryName(QemuExeW) ?? AppPaths.BaseDir);
 
         // 解析两个 QEMU 可执行文件路径：优先用设置里显式指定的 exe；
-        // 窗口版缺失则回退到启动器目录/bin 或启动器目录；控制台版缺失则取窗口版同目录探测。
+        // GUI 版缺失则回退到启动器目录/bin 或启动器目录；控制台版缺失则取 GUI 版同目录探测。
         public static void Resolve(QemuRunner runner)
         {
             string w = ProfileStore.Data?.QemuExeW;
