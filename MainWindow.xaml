@@ -481,7 +481,7 @@
                 </DockPanel>
             </Border>
             <TextBox x:Name="txtLog" Grid.Row="1" IsReadOnly="True" Height="150" BorderThickness="0"
-                     Margin="0,4,0,0" Padding="10,6" VerticalScrollBarVisibility="Auto" FontFamily="Consolas" />
+                     Margin="0" Padding="10,2,10,0" VerticalScrollBarVisibility="Auto" FontFamily="Consolas" />
         </Grid>
     </Grid>
     </Border>
