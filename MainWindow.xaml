@@ -138,7 +138,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="240" MinWidth="120" />
+            <ColumnDefinition Width="216" MinWidth="120" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -147,11 +147,11 @@
         <Border Grid.Row="0" Grid.Column="0" Margin="0" Padding="0,8,0,8">
             <DockPanel>
             <!-- 列表标题 -->
-            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="10,0,8,6">
+            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="6,0,6,6">
                 <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="{loc:Loc VmList}" />
             </DockPanel>
             <!-- 底部操作按钮 -->
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="6,8,6,0">
                 <Button x:Name="btnNew" Style="{StaticResource ToolBtn}" Content="{loc:Loc BtnNew}" Click="btnNew_Click" />
                 <Button x:Name="btnDup" Style="{StaticResource ToolBtn}" Content="{loc:Loc BtnDup}" Click="btnDup_Click" />
                 <Button x:Name="btnDel" Style="{StaticResource ToolBtn}" Margin="0" Content="{loc:Loc BtnDel}" Click="btnDel_Click" />
