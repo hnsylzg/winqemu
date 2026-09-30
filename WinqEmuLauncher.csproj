@@ -7,7 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <AssemblyName>WINQ-EMU-Launcher</AssemblyName>
+    <AssemblyName>WINQEMU</AssemblyName>
     <RootNamespace>WinqEmuLauncher</RootNamespace>
     <EnableDefaultCompileItems>true</EnableDefaultCompileItems>
   </PropertyGroup>
