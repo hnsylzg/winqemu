@@ -1,0 +1,8 @@
+# Build outputs
+bin/
+obj/
+*.user
+.vs/
+
+# Runtime state (VM profiles persisted by the app)
+vms/

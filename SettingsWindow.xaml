@@ -1,0 +1,53 @@
+<Window x:Class="WinqEmuLauncher.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:WinqEmuLauncher"
+        Title="{loc:Loc SettingsTitle}" Width="560" Height="330" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" Background="White">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" MinWidth="170"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{loc:Loc LblLanguage}" VerticalAlignment="Center" Margin="0,6,12,6"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" x:Name="cmbLang" Height="26" VerticalContentAlignment="Center" Margin="0,6"
+                  SelectionChanged="cmbLang_SelectionChanged">
+            <ComboBoxItem Tag="Zh">中文</ComboBoxItem>
+            <ComboBoxItem Tag="En">English</ComboBoxItem>
+        </ComboBox>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{loc:Loc SetQemuExeW}" VerticalAlignment="Center" Margin="0,6,12,6"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtQemuExeW" Height="26" VerticalContentAlignment="Center" Margin="0,6"/>
+        <Button Grid.Row="1" Grid.Column="2" x:Name="btnQemuExeWBrowse" Content="{loc:Loc CdBrowse}" Width="64" Height="26" Margin="8,6,0,6" Click="btnQemuExeWBrowse_Click"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{loc:Loc SetQemuExe}" VerticalAlignment="Center" Margin="0,6,12,6"/>
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtQemuExe" Height="26" VerticalContentAlignment="Center" Margin="0,6"/>
+        <Button Grid.Row="2" Grid.Column="2" x:Name="btnQemuExeBrowse" Content="{loc:Loc CdBrowse}" Width="64" Height="26" Margin="8,6,0,6" Click="btnQemuExeBrowse_Click"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{loc:Loc SetDefaultVmDir}" VerticalAlignment="Center" Margin="0,6,12,6"/>
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtVmDir" Height="26" VerticalContentAlignment="Center" Margin="0,6"/>
+        <Button Grid.Row="3" Grid.Column="2" x:Name="btnVmBrowse" Content="{loc:Loc CdBrowse}" Width="64" Height="26" Margin="8,6,0,6" Click="btnVmBrowse_Click"/>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{loc:Loc SetDefaultIsoDir}" VerticalAlignment="Center" Margin="0,6,12,6"/>
+        <TextBox Grid.Row="4" Grid.Column="1" x:Name="txtIsoDir" Height="26" VerticalContentAlignment="Center" Margin="0,6"/>
+        <Button Grid.Row="4" Grid.Column="2" x:Name="btnIsoBrowse" Content="{loc:Loc CdBrowse}" Width="64" Height="26" Margin="8,6,0,6" Click="btnIsoBrowse_Click"/>
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Text="{loc:Loc SetLeaveEmptyHint}" Foreground="#8A8A8A" FontSize="11" Margin="0,4,0,8" TextWrapping="Wrap"/>
+
+        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnOk" Content="{loc:Loc BtnOk}" Width="80" Height="30" Margin="0,0,8,0" Click="btnOk_Click"/>
+            <Button x:Name="btnCancel" Content="{loc:Loc BtnCancel}" Width="80" Height="30" Click="btnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

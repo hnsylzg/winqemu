@@ -1,0 +1,56 @@
+<Window x:Class="WinqEmuLauncher.CreateDiskDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:WinqEmuLauncher"
+        Title="{loc:Loc CreateDiskTitle}" Height="230" Width="440" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Width" Value="72" />
+            <Setter Property="Margin" Value="3" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="4,2" />
+            <Setter Property="Margin" Value="4" />
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="4" />
+        </Style>
+    </Window.Resources>
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="2" Text="{loc:Loc CdPath}" />
+        <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtPath" />
+        <Button Grid.Row="0" Grid.Column="2" x:Name="btnPath" Content="{loc:Loc CdBrowse}" Click="btnPath_Click" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="2" Text="{loc:Loc CdSize}" />
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtSize" Text="20" />
+
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="2" Text="{loc:Loc CdFormat}" />
+        <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cmbFormat" SelectedIndex="0">
+            <ComboBoxItem>qcow2</ComboBoxItem>
+            <ComboBoxItem>raw</ComboBoxItem>
+        </ComboBox>
+
+        <StackPanel Grid.Row="4" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnOk" Content="{loc:Loc CdCreate}" Click="btnOk_Click" IsDefault="True" />
+            <Button x:Name="btnCancel" Content="{loc:Loc BtnCancel}" Click="btnCancel_Click" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

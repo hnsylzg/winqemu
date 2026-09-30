@@ -1,0 +1,488 @@
+<Window x:Class="WinqEmuLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WinqEmuLauncher"
+        xmlns:loc="clr-namespace:WinqEmuLauncher"
+        Title="{loc:Loc AppTitle}" Height="780" Width="1000"
+        Closing="MainWindow_Closing">
+    <Window.Resources>
+        <!-- 基础按钮：默认 Windows 外观(标签页内按钮保持此原始"大方"风格, 未显式指定样式的按钮套用) -->
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="MinWidth" Value="64" />
+            <Setter Property="Padding" Value="8,2" />
+            <Setter Property="Margin" Value="3" />
+        </Style>
+        <!-- 主操作按钮：稍大, 与次级区分(外观沿用默认 Windows 风格) -->
+        <Style x:Key="PrimaryBtn" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="MinWidth" Value="88" />
+            <Setter Property="Padding" Value="12,3" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+        </Style>
+        <!-- 输入框：统一高度、内容垂直居中 -->
+        <Style x:Key="FieldBox" TargetType="TextBox">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="4,2" />
+            <Setter Property="Margin" Value="0,4" />
+        </Style>
+        <!-- 下拉框：统一高度 -->
+        <Style x:Key="FieldCombo" TargetType="ComboBox">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,4" />
+        </Style>
+        <!-- 分区标题 -->
+        <Style x:Key="SectionTitle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#2D5C9E" />
+            <Setter Property="Margin" Value="0,8,0,2" />
+        </Style>
+        <!-- 分区下分割线 -->
+        <Style x:Key="Sep" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="#E5E5E5" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+            <Setter Property="Padding" Value="0,0,0,4" />
+        </Style>
+        <!-- 字段标签 -->
+        <Style x:Key="Lbl" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,4,12,4" />
+        </Style>
+        <!-- 侧边栏工具按钮：尺寸统一(外观沿用默认 Windows 风格, 与全界面按钮统一) -->
+        <Style x:Key="ToolBtn" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Padding" Value="12,3" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+        </Style>
+        <!-- 标签：扁平细线, 标签栏底 1px #E5E5E5 横线, 选中 2px #444 下划线 -->
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="1" />
+                                </Grid.RowDefinitions>
+                                <DockPanel LastChildFill="True" Margin="0,0,12,0">
+                                    <Button DockPanel.Dock="Right" x:Name="btnSettings" Width="28" Height="24" MinWidth="28"
+                                            ToolTip="{loc:Loc SettingsTitle}" VerticalAlignment="Center"
+                                            Margin="10,-4,0,0" Click="btnSettings_Click">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="Transparent" BorderThickness="0">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="14" Text="&#xE713;" Foreground="#555555"/>
+                                    </Button>
+                                    <TabPanel x:Name="HeaderPanel" IsItemsHost="True" Margin="0" VerticalAlignment="Bottom" />
+                                </DockPanel>
+                                <Border Grid.Row="1" Background="#E5E5E5" />
+                            </Grid>
+                            <ContentPresenter x:Name="PART_SelectedContentHost" Grid.Row="1"
+                                              ContentSource="SelectedContent" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Foreground" Value="#6A6A6A" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0,0,0,2" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}"
+                                Margin="0,0,2,0">
+                            <ContentPresenter x:Name="ContentSite" ContentSource="Header"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#444444" />
+                                <Setter Property="Foreground" Value="#444444" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#444444" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border BorderBrush="#E5E5E5" BorderThickness="1" Margin="0">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240" MinWidth="120" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- 左侧：虚拟机列表 -->
+        <Border Grid.Row="0" Grid.Column="0" Margin="0" Padding="0,8,0,8">
+            <DockPanel>
+            <!-- 列表标题 -->
+            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Margin="10,0,8,6">
+                <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="{loc:Loc VmList}" />
+            </DockPanel>
+            <!-- 底部操作按钮 -->
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0">
+                <Button x:Name="btnNew" Style="{StaticResource ToolBtn}" Content="{loc:Loc BtnNew}" Click="btnNew_Click" />
+                <Button x:Name="btnDup" Style="{StaticResource ToolBtn}" Content="{loc:Loc BtnDup}" Click="btnDup_Click" />
+                <Button x:Name="btnDel" Style="{StaticResource ToolBtn}" Margin="0" Content="{loc:Loc BtnDel}" Click="btnDel_Click" />
+            </StackPanel>
+            <ListBox x:Name="lstVms" SelectionChanged="lstVms_SelectionChanged" BorderThickness="0"
+                     PreviewMouseRightButtonDown="lstVms_PreviewMouseRightButtonDown"
+                     MouseDoubleClick="lstVms_MouseDoubleClick">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="{loc:Loc CtxStart}" Click="ctxStart_Click" />
+                        <MenuItem Header="{loc:Loc CtxStop}" Click="ctxStop_Click" />
+                        <MenuItem Header="{loc:Loc CtxRestart}" Click="ctxRestart_Click" />
+                        <Separator />
+                        <MenuItem Header="{loc:Loc CtxRename}" Click="ctxRename_Click" />
+                        <MenuItem Header="{loc:Loc CtxDuplicate}" Click="ctxDup_Click" />
+                        <MenuItem Header="{loc:Loc CtxDelete}" Click="ctxDel_Click" />
+                        <Separator />
+                        <MenuItem Header="{loc:Loc CtxExportBat}" Click="ctxExportBat_Click" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <Viewbox Width="16" Height="16" Margin="0,0,6,0" VerticalAlignment="Center">
+                                <Canvas Width="24" Height="24">
+                                    <Rectangle Canvas.Left="2" Canvas.Top="3" Width="20" Height="14" RadiusX="2" RadiusY="2" Stroke="#6A6A6A" StrokeThickness="2" Fill="White"/>
+                                    <Rectangle Canvas.Left="4" Canvas.Top="5" Width="16" Height="10" RadiusX="1" RadiusY="1">
+                                        <Rectangle.Style>
+                                            <Style TargetType="Rectangle">
+                                                <Setter Property="Fill" Value="#CFCFCF"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsRunning}" Value="True">
+                                                        <Setter Property="Fill" Value="LimeGreen"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Rectangle.Style>
+                                    </Rectangle>
+                                    <Path Data="M8 21 H16" Stroke="#6A6A6A" StrokeThickness="2" StrokeEndLineCap="Round"/>
+                                    <Path Data="M12 17 V21" Stroke="#6A6A6A" StrokeThickness="2" StrokeEndLineCap="Round"/>
+                                </Canvas>
+                            </Viewbox>
+                            <Grid>
+                                <TextBlock x:Name="txtName" Text="{Binding Name}" VerticalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBox x:Name="txtEdit" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                         VerticalAlignment="Center">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+                                            <EventSetter Event="KeyDown" Handler="RenameTextBox_KeyDown" />
+                                            <EventSetter Event="LostFocus" Handler="RenameTextBox_LostFocus" />
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsEditing}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                            </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+        </Border>
+
+        <!-- 中间：1px 可见细线 + 5px 拖拽命中区 -->
+        <GridSplitter Grid.Row="0" Grid.Column="1" Width="5" Background="Transparent"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <Border Grid.Row="0" Grid.Column="1" Width="1" Background="#E5E5E5"
+                HorizontalAlignment="Center" VerticalAlignment="Stretch" IsHitTestVisible="False" />
+
+        <!-- 右侧：配置（顶部操作条 + 标签页，按 4 类分类） -->
+        <Border Grid.Row="0" Grid.Column="2" Margin="0">
+            <DockPanel>
+            <!-- 顶部操作条：状态 + 主操作按钮 -->
+            <Border DockPanel.Dock="Bottom" BorderThickness="0" BorderBrush="#D5D5D5"
+                    Padding="0,0,12,8" Margin="0,6,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="btnSave" Style="{StaticResource PrimaryBtn}" Click="btnSave_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Loc BtnSave}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnLaunch" Style="{StaticResource PrimaryBtn}" Click="btnLaunch_Click">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE768;" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Loc BtnLaunch}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="btnStop" Style="{StaticResource PrimaryBtn}"
+                            Click="btnStop_Click" IsEnabled="{Binding DataContext.IsRunning, ElementName=ConfigRoot}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE71A;" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Text="{loc:Loc BtnStop}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+            <TabControl x:Name="ConfigRoot" Margin="0,6,0,0" BorderThickness="0">
+            <!-- 1. 核心硬件 -->
+            <TabItem Header="{loc:Loc TabHardware}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource Lbl}" Text="{loc:Loc LblCpu}" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource FieldBox}" Text="{Binding CpuCores}" />
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource Lbl}" Text="{loc:Loc LblRam}" />
+                        <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource FieldBox}" Text="{Binding RamGb}" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource SectionTitle}" Text="{loc:Loc SecGpu}" />
+                        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Sep}" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource Lbl}" Text="{loc:Loc LblHostMem}" />
+                        <TextBox Grid.Row="4" Grid.Column="1" Style="{StaticResource FieldBox}" Text="{Binding HostMemGb}" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource Lbl}" Text="{loc:Loc LblGpuMode}" />
+                        <ComboBox Grid.Row="5" Grid.Column="1" Style="{StaticResource FieldCombo}" SelectedIndex="{Binding GpuMode}">
+                            <ComboBoxItem Content="{loc:Loc GpuMode0}" />
+                            <ComboBoxItem Content="{loc:Loc GpuMode1}" />
+                            <ComboBoxItem Content="{loc:Loc GpuMode2}" />
+                            <ComboBoxItem Content="{loc:Loc GpuMode3}" />
+                        </ComboBox>
+                        <CheckBox Grid.Row="6" Grid.Column="1" Content="{loc:Loc ChkVaapi}" IsChecked="{Binding UseVaapi}" Margin="0,4" VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Row="7" Grid.Column="0" Style="{StaticResource Lbl}" Text="{loc:Loc LblAccel}" />
+                        <ComboBox Grid.Row="7" Grid.Column="1" Style="{StaticResource FieldCombo}" SelectedIndex="{Binding Accel}">
+                            <ComboBoxItem Content="{loc:Loc Accel0}" />
+                            <ComboBoxItem Content="{loc:Loc Accel1}" />
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="8" Grid.Column="0" Style="{StaticResource Lbl}" Text="{loc:Loc LblSound}" />
+                        <ComboBox Grid.Row="8" Grid.Column="1" Style="{StaticResource FieldCombo}" SelectedIndex="{Binding Sound}">
+                            <ComboBoxItem Content="{loc:Loc Sound0}" />
+                            <ComboBoxItem Content="{loc:Loc Sound1}" />
+                            <ComboBoxItem Content="{loc:Loc Sound2}" />
+                            <ComboBoxItem Content="{loc:Loc Sound3}" />
+                        </ComboBox>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- 2. 存储与镜像 -->
+            <TabItem Header="{loc:Loc TabStorage}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                    <StackPanel>
+                        <!-- 启动设备顺序 -->
+                        <StackPanel Margin="0,4">
+                            <TextBlock Style="{StaticResource SectionTitle}" Text="{loc:Loc SecBootOrder}" />
+                            <Border Style="{StaticResource Sep}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource Lbl}" Text="{loc:Loc LblBootDevice}" />
+                                <ComboBox Grid.Column="1" Style="{StaticResource FieldCombo}" SelectedIndex="{Binding BootDevice}">
+                                    <ComboBoxItem Content="{loc:Loc Boot0}" />
+                                    <ComboBoxItem Content="{loc:Loc Boot1}" />
+                                    <ComboBoxItem Content="{loc:Loc Boot2}" />
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- 引导模式 -->
+                        <StackPanel Margin="0,4">
+                            <TextBlock Style="{StaticResource SectionTitle}" Text="{loc:Loc SecBootMode}" />
+                            <Border Style="{StaticResource Sep}" />
+                            <CheckBox Content="{loc:Loc ChkUefi}"
+                                      IsChecked="{Binding UseEfi}" Margin="0,4" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <!-- 磁盘 -->
+                        <StackPanel Margin="0,4">
+                            <TextBlock Style="{StaticResource SectionTitle}" Text="{loc:Loc SecDisk}" />
+                            <Border Style="{StaticResource Sep}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <Button Content="{loc:Loc DiskBtnNew}" Click="btnDiskCreate_Click" />
+                                <Button Content="{loc:Loc DiskBtnAdd}" Click="btnDiskAdd_Click" />
+                                <Button Content="{loc:Loc DiskBtnBrowse}" Click="btnDiskBrowse_Click" />
+                                <Button Content="{loc:Loc DiskBtnRemove}" Click="btnDiskRemove_Click" />
+                            </StackPanel>
+                            <DataGrid x:Name="dgDisks" ItemsSource="{Binding Disks}" AutoGenerateColumns="False"
+                                      MaxHeight="160" CanUserAddRows="False"
+                                      GridLinesVisibility="All" VerticalGridLinesBrush="#EDEDED" HorizontalGridLinesBrush="#EDEDED">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="{loc:Loc ColDiskPath}" Binding="{Binding Path}" Width="*" />
+                                    <DataGridComboBoxColumn Header="{loc:Loc ColFormat}" Width="80"
+                                                           SelectedItemBinding="{Binding Format}"
+                                                           ItemsSource="{x:Static local:MainWindow.DiskFormatOptions}" />
+                                    <DataGridComboBoxColumn Header="{loc:Loc ColIface}" Width="80"
+                                                           SelectedItemBinding="{Binding Iface}"
+                                                           ItemsSource="{x:Static local:MainWindow.DiskIfaceOptions}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+
+                        <!-- ISO 镜像 -->
+                        <StackPanel Margin="0,4">
+                            <TextBlock Style="{StaticResource SectionTitle}" Text="{loc:Loc SecIso}" />
+                            <Border Style="{StaticResource Sep}" />
+                            <DockPanel Margin="0,0,0,4">
+                                <Button DockPanel.Dock="Right" Content="{loc:Loc IsoBtnBrowse}" Click="btnIsoBrowse_Click" />
+                                <TextBox Style="{StaticResource FieldBox}" Text="{Binding IsoImage, UpdateSourceTrigger=PropertyChanged}" />
+                            </DockPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- 4. 网络与共享 -->
+            <TabItem Header="{loc:Loc TabNetwork}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                    <StackPanel>
+                        <!-- 网卡 -->
+                        <StackPanel Margin="0,4">
+                            <TextBlock Style="{StaticResource SectionTitle}" Text="{loc:Loc SecNic}" />
+                            <Border Style="{StaticResource Sep}" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Style="{StaticResource Lbl}" Text="{loc:Loc LblNetwork}" />
+                                <ComboBox Grid.Column="1" Style="{StaticResource FieldCombo}" SelectedIndex="{Binding Network}">
+                                    <ComboBoxItem Content="{loc:Loc Net0}" />
+                                    <ComboBoxItem Content="{loc:Loc Net1}" />
+                                    <ComboBoxItem Content="{loc:Loc Net2}" />
+                                </ComboBox>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- 端口转发 -->
+                        <StackPanel Margin="0,4">
+                            <TextBlock Style="{StaticResource SectionTitle}" Text="{loc:Loc SecPortFwd}" />
+                            <Border Style="{StaticResource Sep}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <Button Content="{loc:Loc PortBtnAdd}" Click="btnPortAdd_Click" />
+                                <Button Content="{loc:Loc PortBtnRemove}" Click="btnPortRemove_Click" />
+                            </StackPanel>
+                            <DataGrid x:Name="dgPorts" ItemsSource="{Binding PortForwards}" AutoGenerateColumns="False"
+                                      MaxHeight="140" CanUserAddRows="False"
+                                      GridLinesVisibility="All" VerticalGridLinesBrush="#EDEDED" HorizontalGridLinesBrush="#EDEDED">
+                                <DataGrid.Columns>
+                                    <DataGridComboBoxColumn Header="{loc:Loc PortColProtocol}" SelectedItemBinding="{Binding Protocol}" Width="*"
+                                                          ItemsSource="{x:Static local:MainWindow.ProtocolOptions}" />
+                                    <DataGridTextColumn Header="{loc:Loc PortColHost}" Binding="{Binding HostPort}" Width="*" />
+                                    <DataGridTextColumn Header="{loc:Loc PortColGuest}" Binding="{Binding GuestPort}" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+
+                        <!-- 共享文件夹 -->
+                        <StackPanel Margin="0,4">
+                            <TextBlock Style="{StaticResource SectionTitle}" Text="{loc:Loc SecSharedFolder}" />
+                            <Border Style="{StaticResource Sep}" />
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <Button Content="{loc:Loc FolderBtnAdd}" Click="btnFolderAdd_Click" />
+                                <Button Content="{loc:Loc FolderBtnBrowse}" Click="btnFolderBrowse_Click" />
+                                <Button Content="{loc:Loc FolderBtnRemove}" Click="btnFolderRemove_Click" />
+                            </StackPanel>
+                            <DataGrid x:Name="dgFolders" ItemsSource="{Binding SharedFolders}" AutoGenerateColumns="False"
+                                      MaxHeight="140" CanUserAddRows="False"
+                                      GridLinesVisibility="All" VerticalGridLinesBrush="#EDEDED" HorizontalGridLinesBrush="#EDEDED">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="{loc:Loc FolderColHost}" Binding="{Binding HostPath}" Width="*" />
+                                    <DataGridTextColumn Header="{loc:Loc FolderColTag}" Binding="{Binding Tag}" Width="Auto" />
+                                    <DataGridComboBoxColumn Header="{loc:Loc FolderColSec}" SelectedItemBinding="{Binding SecurityModel}" Width="Auto"
+                                                          ItemsSource="{x:Static local:MainWindow.SecurityModelOptions}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+            </DockPanel>
+        </Border>
+
+        <!-- 日志（点击标题条折叠/展开） -->
+        <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="#F2F2F2" BorderBrush="#E5E5E5" BorderThickness="0,0,0,1"
+                    Padding="10,6" Cursor="Hand" MouseLeftButtonUp="LogHeader_Click">
+                <DockPanel LastChildFill="False">
+                    <TextBlock x:Name="txtLogTitle" DockPanel.Dock="Left" Text="日志" Foreground="#6A6A6A" FontSize="12"
+                               VerticalAlignment="Center" />
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <TextBlock x:Name="txtStatus" Foreground="#8A8A8A" FontSize="12"
+                                   VerticalAlignment="Center" Margin="0,0,14,0" />
+                        <Path x:Name="txtLogChevron" Stroke="#6A6A6A" StrokeThickness="1.5"
+                              Width="12" Height="12" VerticalAlignment="Center"
+                              SnapsToDevicePixels="True" Data="M2,6 L10,6" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+            <TextBox x:Name="txtLog" Grid.Row="1" IsReadOnly="True" Height="150" BorderThickness="0"
+                     Margin="0,4,0,0" Padding="10,6" VerticalScrollBarVisibility="Auto" FontFamily="Consolas" />
+        </Grid>
+    </Grid>
+    </Border>
+</Window>
