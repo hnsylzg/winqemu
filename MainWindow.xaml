@@ -55,7 +55,7 @@
         <!-- 侧边栏工具按钮：尺寸统一(外观沿用默认 Windows 风格, 与全界面按钮统一) -->
         <Style x:Key="ToolBtn" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Height" Value="28" />
-            <Setter Property="Padding" Value="12,3" />
+            <Setter Property="Padding" Value="6,3" />
             <Setter Property="Margin" Value="0,0,6,0" />
         </Style>
         <!-- 标签：扁平细线, 标签栏底 1px #E5E5E5 横线, 选中 2px #444 下划线 -->
@@ -138,7 +138,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="216" MinWidth="120" />
+            <ColumnDefinition Width="220" MinWidth="120" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>

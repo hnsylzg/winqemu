@@ -371,8 +371,8 @@ namespace WinqEmuLauncher
             if (dlg.ShowDialog() != true) return;
             var sb = new StringBuilder();
             sb.AppendLine("@echo off");
-            sb.AppendLine("REM WINQ-EMU 启动脚本 - " + vm.Name);
-            sb.AppendLine("REM 由 WINQ-EMU 启动器导出（" + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + "）");
+            sb.AppendLine("REM WINQ-EMU startup script - " + vm.Name);
+            sb.AppendLine("REM Exported by WINQ-EMU launcher (" + DateTime.Now.ToString("yyyy-MM-dd HH:mm") + ")");
             sb.AppendLine("setlocal");
             sb.AppendLine("cd /d \"" + binDir + "\"");
             if (vm.UseEfi)
