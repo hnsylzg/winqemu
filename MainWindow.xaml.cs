@@ -65,6 +65,8 @@ namespace WinqEmuLauncher
             ConfigRoot.DataContext = lstVms.SelectedItem as VmConfig;
             var vm = Current;
             txtStatus.Text = vm == null ? "" : Lang.T("StatusEditing", vm.Name);
+            btnDup.IsEnabled = vm != null;
+            btnDel.IsEnabled = vm != null;
             if (vm != null) ProfileStore.SaveLastSelected(vm.Name);
         }
 
@@ -113,7 +115,10 @@ namespace WinqEmuLauncher
             if (MsgDialog.Confirm(this, Lang.T("ConfirmTitle"), Lang.T("DelConfirm", vm.Name)) == true)
             {
                 _vms.Remove(vm);
+                lstVms.SelectedItem = null;
                 ConfigRoot.DataContext = null;
+                btnDup.IsEnabled = false;
+                btnDel.IsEnabled = false;
             }
         }
 
