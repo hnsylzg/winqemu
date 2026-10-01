@@ -181,15 +181,15 @@
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button x:Name="btnNew" Style="{StaticResource IconBtn}" ToolTip="{loc:Loc BtnNew}"
                             Click="btnNew_Click">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Text="&#xE710;" Foreground="#555555" />
+                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="13" Text="&#xE710;" Foreground="#555555" />
                     </Button>
                     <Button x:Name="btnDup" Style="{StaticResource IconBtn}" ToolTip="{loc:Loc BtnDup}"
                             IsEnabled="False" Click="btnDup_Click">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Text="&#xE8C8;" Foreground="#555555" />
+                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="13" Text="&#xE8C8;" Foreground="#555555" />
                     </Button>
                     <Button x:Name="btnDel" Style="{StaticResource IconBtn}" Margin="0" ToolTip="{loc:Loc BtnDel}"
                             IsEnabled="False" Click="btnDel_Click">
-                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="12" Text="&#xE74D;" Foreground="#555555" />
+                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="13" Text="&#xE74D;" Foreground="#555555" />
                     </Button>
                 </StackPanel>
                 <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="{loc:Loc VmList}" />
